@@ -2,6 +2,7 @@
 var
   // modules
   gulp = require('gulp'),
+  webpack = require('webpack-stream'),
   newer = require('gulp-newer'),
   imagemin = require('gulp-imagemin'),
   htmlclean = require('gulp-htmlclean'),
@@ -20,6 +21,7 @@ var
 	nodemon = require('gulp-nodemon'),
 	notify = require('gulp-notify'),
   browserSync = require('browser-sync').create(),
+  babel = require('gulp-babel')
 
   // development mode?
   devBuild = (process.env.NODE_ENV !== 'production'),
@@ -31,10 +33,23 @@ var
   }
 ;
 
+gulp.task('serverjs', ['serve'], () => {
+  var jsbuild = gulp.src(folder.src + 'server/index.js')
+    .pipe(webpack( require('./webpack.config.server.js') ));
+    
+  if (!devBuild) {
+    jsbuild = jsbuild
+      .pipe(stripdebug())
+      .pipe(uglify());
+  }
+
+  return jsbuild.pipe(gulp.dest(folder.build + 'server'));
+});
+
 gulp.task('serve', function () {
   nodemon({
-    script: 'server.js'
-  , watch: 'server.js'
+    script: folder.build + 'server/index.js'
+  , watch: folder.build + 'server/index.js'
   })
     .on('restart', function onRestart() {
         // Also reload the browsers after a slight delay
@@ -46,9 +61,9 @@ gulp.task('serve', function () {
     });
 });
 
-gulp.task('browser-sync', ['serve', 'css'], function() {
+gulp.task('browser-sync', ['css'], function() {
 
-    var files = ['./src/**/*.js', './src/**/*.css', './src/index.html'];
+    var files = ['./src/client/index.js', './src/**/*.css', './src/index.html'];
 
     browserSync.init(files, {
         proxy: "localhost:8080"
@@ -65,12 +80,13 @@ gulp.task('images', function() {
 });
 
 // JavaScript processing
-gulp.task('js', function() {
+gulp.task('jsclient', function() {
 
-  var jsbuild = gulp.src(folder.src + 'js/**/*')
+  var jsbuild = gulp.src(folder.src + 'client/index.js')
     .pipe(deporder())
-    .pipe(webpack())
-    .pipe(concat('main.js'));
+    .pipe(concat('main.js'))
+    .pipe(webpack( require('./webpack.config.client.js') ));
+    
 
   if (!devBuild) {
     jsbuild = jsbuild
@@ -78,15 +94,13 @@ gulp.task('js', function() {
       .pipe(uglify());
   }
 
-  return jsbuild.pipe(gulp.dest(folder.build + 'js/'));
+  return jsbuild.pipe(gulp.dest(folder.build + 'client/'));
 
 });
 
 gulp.task('html', function() {
 
   var html = gulp.src(folder.src + '*.html');
-  console.log(html);
-
   return html.pipe(gulp.dest(folder.build));
 
 });
@@ -131,4 +145,4 @@ gulp.task('watch', function() {
 
 });
 
-gulp.task('default', ['css', 'js', 'html', 'watch', 'browser-sync']);
+gulp.task('default', ['css', 'serverjs', 'jsclient', 'html', 'watch', 'browser-sync']);

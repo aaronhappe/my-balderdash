@@ -18,6 +18,10 @@
   "homepage": "https://github.com/aaronhappe/my-balderdash#readme",
   "devDependencies": {
     "autoprefixer": "^7.1.1",
+    "babel-cli": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
     "browser-sync": "^2.18.12",
     "css-mqpacker": "^6.0.1",
     "cssnano": "^3.10.0",
@@ -38,7 +42,13 @@
     "postcss-assets": "^4.1.0"
   },
   "dependencies": {
+    "babel-loader": "^7.1.1",
     "express": "^4.15.3",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-router-dom": "^4.1.1",
+    "socket.io": "^2.0.3",
+    "webpack-node-externals": "^1.6.0",
     "webpack-stream": "^3.2.0"
   }
 }
