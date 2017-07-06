@@ -14,6 +14,6 @@ import 'whatwg-fetch';
 
 render((
     <Router>
-        <App gists={window.__gists__} />
+        // <App />
     </Router>
-), document.getElementById('app'));
+), document.getElementById('root'));

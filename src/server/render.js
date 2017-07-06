@@ -23,10 +23,8 @@ export default (renderMe, gists) => `<!DOCTYPE html>
         </style>
     </head>
     <body>
-        <div id="app">${renderToString(renderMe)}</div>
-        ${gists ? `
+        <div id="root">${renderToString(renderMe)}</div>
             <script>window.__gists__ = ${JSON.stringify(gists)};</script>
-            <script src="/static/client.js"></script>
-        ` : ''}
+            <script src="../client/main.js"></script>
     </body>
 </html>`;

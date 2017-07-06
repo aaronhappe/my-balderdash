@@ -34,6 +34,9 @@ var
 ;
 
 gulp.task('serverjs', ['serve'], () => {
+
+  console.log('jsserver');
+
   var jsbuild = gulp.src(folder.src + 'server/index.js')
     .pipe(webpack( require('./webpack.config.server.js') ));
     
@@ -81,6 +84,8 @@ gulp.task('images', function() {
 
 // JavaScript processing
 gulp.task('jsclient', function() {
+
+  console.log('jslicent');
 
   var jsbuild = gulp.src(folder.src + 'client/index.js')
     .pipe(deporder())
@@ -132,17 +137,23 @@ gulp.task('css', ['images'], function() {
 gulp.task('watch', function() {
 
   // css changes
-  gulp.watch(folder.src + 'scss/**/*', ['css']);
+  gulp.watch(folder.src + 'client/scss/**/*', ['css']);
 
   // html changes
   gulp.watch(folder.src + '*.html', ['html']);
 
   // image changes
-  gulp.watch(folder.src + 'images/**/*', ['images']);
+  gulp.watch(folder.src + 'client/images/**/*', ['images']);
 
   // javascript changes
-  gulp.watch(folder.src + 'js/**/*', ['js']);
+  gulp.watch(folder.src + 'client/*.js', [ 'jsclient']);
+
+  // javascript changes
+  // gulp.watch(folder.src + 'server/*.js', [ 'jsclient']);
+
+  // javascript changes
+  gulp.watch(folder.src + 'shared/**/*', [ 'jsclient']);
 
 });
 
-gulp.task('default', ['css', 'serverjs', 'jsclient', 'html', 'watch', 'browser-sync']);
+gulp.task('default', ['css', 'jsclient', 'serverjs', 'html', 'watch', 'browser-sync']);

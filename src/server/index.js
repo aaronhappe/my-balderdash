@@ -28,26 +28,20 @@ sourceMapSupport.install();
 const app = express();
 app.use('/static', express.static('./build'));
 
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
     const match = routes.reduce((acc, route) => matchPath(req.url, route, { exact: true }) || acc, null);
     if (!match) {
         res.status(404).send(render(<NoMatch />));
         return;
     }
-    fetch('https://api.github.com/gists')
-        .then(r => r.json())
-        .then(gists => {
+
             res.status(200).send(render(
                 (
                     <Router context={{}} location={req.url}>
-                        <App gists={gists} />
+                        <App />
                     </Router>
-                ), gists
+                )
             ));
-        }).catch(err => {
-            console.error(err);
-            res.status(500).send(render(<Error />));
-        });
 });
 
 app.listen(8080, () => console.log('Demo app listening on port 8080'));

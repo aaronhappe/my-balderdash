@@ -19,10 +19,12 @@ const style = {
     alignItems: 'stretch'
 };
 
-export default ({ gists }) => (
+console.log('shared')
+
+export default ({ }) => (
     <div>
 
-        <p>app is working, got it?</p>
+        <p>abcdef?</p>
 
     </div>
 );
